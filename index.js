@@ -56,7 +56,7 @@ class Ball {
             this.dy = -this.dy
         }
     }
-
+    // Detects the ball impacting the board objects.
     impact(board) {
         if (this.y < board.y &&
             this.y > board.y - this.r &&
@@ -87,10 +87,26 @@ class Board {
 }
 
 // Instantiate a new Ball
-const ball = new Ball(canvas.width / 2, 200, 30, 2, 5)
+const ball = new Ball(canvas.width / 2, 200, canvas.width / 50, 2, 7)
 
 // Instantiate the bottom Board
 const userBoard = new Board(200, canvas.height - 25, 120, 20, 'blue')
+
+// Instantiate Bricks To Break
+const bricksToBreak0 = []
+const bricksToBreak1 = []
+const bricksToBreak2 = []
+const bricksToBreak3 = []
+const bricksToBreak4 = []
+const bricksToBreak5 = []
+for (let i = 0; i < 10; i++) {
+    bricksToBreak0.push(new Board(i * canvas.width / 10, 105, canvas.width / 10 - 1, 20, 'red'))
+    bricksToBreak1.push(new Board(i * canvas.width / 10, 84, canvas.width / 10 - 1, 20, 'orange'))
+    bricksToBreak2.push(new Board(i * canvas.width / 10, 63, canvas.width / 10 - 1, 20, 'yellow'))
+    bricksToBreak3.push(new Board(i * canvas.width / 10, 42, canvas.width / 10 - 1, 20, 'blue'))
+    bricksToBreak4.push(new Board(i * canvas.width / 10, 21, canvas.width / 10 - 1, 20, 'indigo'))
+    bricksToBreak5.push(new Board(i * canvas.width / 10, 0, canvas.width / 10 - 1, 20, 'violet'))
+}
 
 // Add an object container to use for implementing a game loop 
 const isKeyPressed = {}
@@ -129,6 +145,14 @@ const animate = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ball.move();
     userBoard.draw()
+    for (let i = 0; i < 10; i++) {
+        bricksToBreak0[i].draw()
+        bricksToBreak1[i].draw()
+        bricksToBreak2[i].draw()
+        bricksToBreak3[i].draw()
+        bricksToBreak4[i].draw()
+        bricksToBreak5[i].draw()
+    }
 }
 
 // Start Game Event Listener
