@@ -56,7 +56,7 @@ class Board {
         this.w = w;
         this.h = h;
         this.color = color;
-        this.dx = 10;
+        this.dx = 5;
     }
 
     draw() {
@@ -71,21 +71,36 @@ const ball = new Ball(canvas.width / 2, 200, 30, 2, 5)
 // Instantiate the bottom Board
 const userBoard = new Board(200, canvas.height - 25, 120, 20, 'blue')
 
-// Event Listener to move USERBOARD object
+// Add an object container to use for implementing a game loop 
+const isKeyPressed = {}
+
+// Event listeners to keep state of left and right keyboard events
 window.addEventListener('keydown', (e) => {
-    switch (e.key) {
-        case "Right":
-        case 'ArrowRight':
+    isKeyPressed[e.key] = true
+}, true);
+
+window.addEventListener('keyup', (e) => {
+    isKeyPressed[e.key] = false
+}, true);
+
+// Game Loop function 
+const gameLoop = () => {
+    if (isKeyPressed['ArrowRight' || 'Right']) {
+        if (userBoard.x >= window.innerWidth - userBoard.w) {
+            userBoard.x += 0
+        } else {
             userBoard.x += userBoard.dx
-            console.log(userBoard.x)
-            break
-        case 'Left':
-        case 'ArrowLeft':
-            userBoard.x -= userBoard.dx
-            console.log(userBoard.x)
-            break
+        }
     }
-})
+    if (isKeyPressed['ArrowLeft' || 'Left']) {
+        if (userBoard.x <= 0) {
+            userBoard.x -= 0
+        } else {
+            userBoard.x -= userBoard.dx
+        }
+    }
+    setTimeout(gameLoop, 10)
+}
 
 // Animation Function
 const animate = () => {
@@ -99,6 +114,7 @@ const animate = () => {
 startGameBtn.addEventListener('click', () => {
     startGameBtn.style.visibility = 'hidden'
     animate()
+    gameLoop()
 })
 
 
