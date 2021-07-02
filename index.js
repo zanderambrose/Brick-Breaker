@@ -11,6 +11,12 @@ canvas.style.border = '1px solid black'
 canvas.width = window.innerWidth
 canvas.height = window.innerHeight
 
+// Window resize event listener for full screen view
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+})
+
 // Make Start Game Button
 const startGameBtn = document.createElement('button')
 startGameBtn.textContent = "Click To Start Game"
@@ -44,6 +50,21 @@ class Ball {
         }
         if (this.y + this.r > canvas.height || this.y - this.r < 0) {
             this.dy = -this.dy
+        }
+
+        if (this.impact(userBoard) && this.dy > 0) {
+            this.dy = -this.dy
+        }
+    }
+
+    impact(board) {
+        if (this.y < board.y &&
+            this.y > board.y - this.r &&
+            this.x > board.x - this.r &&
+            this.x < board.x + board.w + this.r) {
+            return true
+        } else {
+            return false
         }
     }
 }
