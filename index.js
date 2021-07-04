@@ -52,12 +52,12 @@ class Ball {
             this.dy = -this.dy
         }
 
-        if (this.impact(userBoard) && this.dy > 0) {
+        if (this.paddleImpact(userBoard) && this.dy > 0) {
             this.dy = -this.dy
         }
     }
-    // Detects the ball impacting the board objects.
-    impact(board) {
+    // Detects the ball impacting the paddle object.
+    paddleImpact(board) {
         if (this.y < board.y &&
             this.y > board.y - this.r &&
             this.x > board.x - this.r &&
@@ -65,6 +65,19 @@ class Ball {
             return true
         } else {
             return false
+        }
+    }
+    // Detects the ball impacting the brick objects
+    brickImpact(brick) {
+        if (brick.isBroken == false) {
+            if (this.x > brick.x &&
+                this.x < brick.x + brick.w &&
+                this.y - this.r > brick.y &&
+                this.y - this.r < brick.y + brick.h) {
+
+                brick.isBroken = true
+                this.dy = -this.dy;
+            }
         }
     }
 }
@@ -78,34 +91,32 @@ class Board {
         this.h = h;
         this.color = color;
         this.dx = 5;
+        this.isBroken = false
     }
 
     draw() {
-        ctx.fillStyle = this.color
-        ctx.fillRect(this.x, this.y, this.w, this.h)
+        if (this.isBroken === false) {
+            ctx.fillStyle = this.color
+            ctx.fillRect(this.x, this.y, this.w, this.h)
+        }
     }
 }
 
 // Instantiate a new Ball
-const ball = new Ball(canvas.width / 2, 200, canvas.width / 50, 2, 7)
+const ball = new Ball(canvas.width / 2, 200, canvas.width / 50, 2, 8)
 
 // Instantiate the bottom Board
 const userBoard = new Board(200, canvas.height - 25, 120, 20, 'blue')
 
 // Instantiate Bricks To Break
-const bricksToBreak0 = []
-const bricksToBreak1 = []
-const bricksToBreak2 = []
-const bricksToBreak3 = []
-const bricksToBreak4 = []
-const bricksToBreak5 = []
+const bricksToBreak = []
 for (let i = 0; i < 10; i++) {
-    bricksToBreak0.push(new Board(i * canvas.width / 10, 105, canvas.width / 10 - 1, 20, 'red'))
-    bricksToBreak1.push(new Board(i * canvas.width / 10, 84, canvas.width / 10 - 1, 20, 'orange'))
-    bricksToBreak2.push(new Board(i * canvas.width / 10, 63, canvas.width / 10 - 1, 20, 'yellow'))
-    bricksToBreak3.push(new Board(i * canvas.width / 10, 42, canvas.width / 10 - 1, 20, 'blue'))
-    bricksToBreak4.push(new Board(i * canvas.width / 10, 21, canvas.width / 10 - 1, 20, 'indigo'))
-    bricksToBreak5.push(new Board(i * canvas.width / 10, 0, canvas.width / 10 - 1, 20, 'violet'))
+    bricksToBreak.push(new Board(i * canvas.width / 10, 105, canvas.width / 10 - 1, 20, 'red'))
+    bricksToBreak.push(new Board(i * canvas.width / 10, 84, canvas.width / 10 - 1, 20, 'orange'))
+    bricksToBreak.push(new Board(i * canvas.width / 10, 63, canvas.width / 10 - 1, 20, 'yellow'))
+    bricksToBreak.push(new Board(i * canvas.width / 10, 42, canvas.width / 10 - 1, 20, 'blue'))
+    bricksToBreak.push(new Board(i * canvas.width / 10, 21, canvas.width / 10 - 1, 20, 'indigo'))
+    bricksToBreak.push(new Board(i * canvas.width / 10, 0, canvas.width / 10 - 1, 20, 'violet'))
 }
 
 // Add an object container to use for implementing a game loop 
@@ -145,13 +156,9 @@ const animate = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ball.move();
     userBoard.draw()
-    for (let i = 0; i < 10; i++) {
-        bricksToBreak0[i].draw()
-        bricksToBreak1[i].draw()
-        bricksToBreak2[i].draw()
-        bricksToBreak3[i].draw()
-        bricksToBreak4[i].draw()
-        bricksToBreak5[i].draw()
+    for (let i = 0; i < 60; i++) {
+        bricksToBreak[i].draw()
+        ball.brickImpact(bricksToBreak[i])
     }
 }
 
