@@ -77,6 +77,7 @@ class Ball {
 
                 brick.isBroken = true
                 this.dy = -this.dy;
+                score++
             }
         }
     }
@@ -103,7 +104,7 @@ class Board {
 }
 
 // Instantiate a new Ball
-const ball = new Ball(canvas.width / 2, 200, canvas.width / 50, 2, 8)
+const ball = new Ball(canvas.width / 2, 200, canvas.width / 50, 5, 20)
 
 // Instantiate the bottom Board
 const userBoard = new Board(200, canvas.height - 25, 120, 20, 'blue')
@@ -150,12 +151,29 @@ const gameLoop = () => {
     setTimeout(gameLoop, 10)
 }
 
+// Score Keeper function 
+var score = 0
+const scoreKeeper = () => {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText(`Score: ${score}`, 8, 400);
+}
+
+// Is Game Over Function
+const isGameOver = () => {
+    if (score == 60) {
+        alert('game over you win')
+    }
+}
+
 // Animation Function
 const animate = () => {
     requestAnimationFrame(animate);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ball.move();
     userBoard.draw()
+    scoreKeeper()
+    isGameOver()
     for (let i = 0; i < 60; i++) {
         bricksToBreak[i].draw()
         ball.brickImpact(bricksToBreak[i])
